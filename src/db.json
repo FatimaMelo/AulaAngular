@@ -1,0 +1,45 @@
+{
+
+    "capas": [
+        {
+          "modelo":"Galaxy",    
+          "preco":1500,
+          "imagem":"assets/celular/cel1.jpg"
+        },
+        {
+          "modelo":"Galaxy",    
+          "preco":1500,
+          "imagem":"assets/celular/cel2.jpg"
+    
+        },
+        {
+          "modelo":"Galaxy",    
+          "preco":1500,
+          "imagem":"assets/celular/cel3.webp"
+    
+        }
+      ],
+      "celulares":[{
+            "nome":"xxxxx",
+            "marca":"llllll",
+            "preco":500,
+            "imagem": "assets/celular/cel1.jpg"
+            },
+        
+            {
+              "nome":"xxxxx",
+            "marca":"llllll",
+            "preco":500,
+            "imagem": "assets/celular/cel1.jpg"
+            },
+        
+            {
+            "nome":"xxxxx",
+            "marca":"llllll",
+            "preco":500,
+            "imagem": "assets/celular/cel1.jpg"
+            }
+            ],
+            "outros":[]
+    
+    }

@@ -1,0 +1,18 @@
+<p>celular works!</p>
+
+
+
+<div class="container-fluid" *ngFor="let produto of celulares">
+    <div class="row">
+        <div class="col-md-4">               
+            <img [src]="produto.imagem">
+            <h4>Nome : {{produto.nome}}</h4>
+            <h4>Marca: {{produto.marca}}</h4>
+            <h4>Preço:R$ {{produto.preco}} </h4>   
+        
+        </div>
+    </div>
+</div>
+
+
+

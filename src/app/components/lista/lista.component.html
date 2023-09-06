@@ -1,0 +1,81 @@
+<h3>Cadastro de Produto</h3>
+
+<form (ngSubmit)="submit()" [formGroup]="formcadastro" #formDir="ngForm">
+    <div class="form-group">
+        <label for="id">Id</label>
+      <input type="text" formControlName="id" id="id" placeholder="Digite o Id">
+      
+      <div *ngIf="id.invalid && formDir.submitted" class="validation-error">
+        <p *ngIf="id.errors?.['required']">O Id é obrigatório.</p>
+      </div>
+    </div>
+  
+    <div class="form-group">
+      <label for="nome">Nome</label>
+      <input
+        type="text" id="nome"
+        formControlName="nome"
+        placeholder="Digite Nome"
+        required> 
+
+        <div *ngIf="nome.invalid && formDir.submitted" class="validation-error">
+            <p *ngIf="nome.errors?.['required']">O nome é obrigatório.</p>
+          </div>
+      
+    </div>
+  
+    <div class="form-group">
+      <label for="marca">Marca</label>
+      <input
+        type="text" id="marca"
+        formControlName="marca"
+        placeholder="Digite Marca"
+        required> 
+        
+        <div *ngIf="marca.invalid && formDir.submitted" class="validation-error">
+            <p *ngIf="marca.errors?.['required']">A marca é obrigatória.</p>
+          </div>
+      
+    </div>
+  
+    <div class="form-group">
+      <label for="preco">Preço</label>
+      <input
+        type="text" id="preco"
+        formControlName="preco"
+        placeholder="Digite preço"
+        required> 
+
+        <div *ngIf="preco.invalid && formDir.submitted" class="validation-error">
+            <p *ngIf="preco.errors?.['required']">O preço é obrigatório.</p>
+          </div>
+      
+    </div>    
+  
+    <div class="form-group">
+      <label for="imagem">Envie uma foto</label>
+      <input
+        type="file" (change)="selecionafoto($event)" >
+  
+    </div>   
+   
+    <input type="submit" value="{{ btnEnviar }}">
+  </form>
+
+<div class="container-fluid">
+    <div class="row">
+        <h3>Produtos Cadastrados</h3>
+        <ul>
+            <li *ngFor="let produto of celulares">
+                Id: {{produto.id}}, Nome : {{produto.nome}} , Marca: {{produto.marca}} , Preço:R$ {{produto.preco}}
+                <button (click)="excluir(produto)">Excluir</button>       
+                             
+                
+            </li>
+          </ul>
+              
+        
+        
+    </div>
+</div>
+
