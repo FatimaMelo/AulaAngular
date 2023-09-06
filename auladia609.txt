@@ -1,0 +1,195 @@
+Listar os Produtos cadastrados / Excluir / Cadastrar
+
+1)Criar componente listar_cadastrar
+
+2)Entrar em seu arquivo db.json e acrescentar id aos registros. Em seguida abra 
+sua interface e também acrescente o id.
+
+3) Configurar as bibliotecas necessárias no appmodule
+
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+4) No celularservice criar os serviços para excluir e cadastrar
+
+  removeItem(id: number){
+    return this.http.delete<Celular>(`${this.apiUrl}/${id}`);
+  }
+
+
+  criar(celular: any) {
+    return this.http.post(this.apiUrl, celular);
+  }
+
+5)No componente listar_cadastrar.html crie sua interface
+
+<h3>Cadastro de Produto</h3>
+
+<form (ngSubmit)="submit()" [formGroup]="formcadastro" #formDir="ngForm">
+    <div class="form-group">
+        <label for="id">Id</label>
+      <input type="text" formControlName="id" id="id" placeholder="Digite o Id">
+      
+      <div *ngIf="id.invalid && formDir.submitted" class="validation-error">
+        <p *ngIf="id.errors?.['required']">O Id é obrigatório.</p>
+      </div>
+    </div>
+  
+    <div class="form-group">
+      <label for="nome">Nome</label>
+      <input
+        type="text" id="nome"
+        formControlName="nome"
+        placeholder="Digite Nome"
+        required> 
+
+        <div *ngIf="nome.invalid && formDir.submitted" class="validation-error">
+            <p *ngIf="nome.errors?.['required']">O nome é obrigatório.</p>
+          </div>
+      
+    </div>
+  
+    <div class="form-group">
+      <label for="marca">Marca</label>
+      <input
+        type="text" id="marca"
+        formControlName="marca"
+        placeholder="Digite Marca"
+        required> 
+        
+        <div *ngIf="marca.invalid && formDir.submitted" class="validation-error">
+            <p *ngIf="marca.errors?.['required']">A marca é obrigatória.</p>
+          </div>
+      
+    </div>
+  
+    <div class="form-group">
+      <label for="preco">Preço</label>
+      <input
+        type="text" id="preco"
+        formControlName="preco"
+        placeholder="Digite preço"
+        required> 
+
+        <div *ngIf="preco.invalid && formDir.submitted" class="validation-error">
+            <p *ngIf="preco.errors?.['required']">O preço é obrigatório.</p>
+          </div>
+      
+    </div>    
+  
+    <div class="form-group">
+      <label for="imagem">Envie uma foto</label>
+      <input
+        type="file" (change)="selecionafoto($event)" >
+  
+    </div>   
+   
+    <input type="submit" value="{{ btnEnviar }}">
+  </form>
+
+<div class="container-fluid">
+    <div class="row">
+        <h3>Produtos Cadastrados</h3>
+        <ul>
+            <li *ngFor="let produto of celulares">
+                Id: {{produto.id}}, Nome : {{produto.nome}} , Marca: {{produto.marca}} , Preço:R$ {{produto.preco}}
+                <button (click)="excluir(produto)">Excluir</button>                     
+                
+            </li>
+          </ul>
+              
+        
+        
+    </div>
+</div>
+
+6) Abra o componente listar_cadastrar.ts para programar o cadastro dos dados. Em primeiro
+lugar faça as importações necessárias e chame o serviço no construtor.
+
+
+import { Component, Input} from '@angular/core';
+import { Celular } from 'src/app/Celular';
+import { CelularserviceService } from 'src/app/services/celularservice.service';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
+
+
+		Dentro da export class
+     constructor(private celularservice: CelularserviceService){}
+    
+       
+  
+7) Agora na sequência programe para receber os dados do formulário, validar e salvar 
+os dados digitados.
+
+ @Input() btnEnviar = 'Enviar!';
+
+ formcadastro!: FormGroup; 
+
+  ngOnInit() : void{
+    this.formcadastro = new FormGroup({
+      id: new FormControl('', [Validators.required]),
+      nome: new FormControl('', [Validators.required]),
+      marca: new FormControl('', [Validators.required]),
+      image: new FormControl(''),
+      preco: new FormControl('', [Validators.required]),    
+
+      });
+  }
+
+  //PASSO 5 - RECEBER DADOS DO FORM
+  get id(){ 
+    return this.formcadastro.get('id')!;//COLOCAR A EXCLAMAÇÃO NO FIM
+  }
+
+  get nome(){ 
+    return this.formcadastro.get('nome')!;//COLOCAR A EXCLAMAÇÃO NO FIM
+  }
+
+  get marca(){
+    return this.formcadastro.get('marca')!;//COLOCAR A EXCLAMAÇÃO NO FIM
+  }
+
+  get preco(){
+    return this.formcadastro.get('preco')!;
+ }
+
+  selecionafoto(event: any){
+    const file: File = event.target.files[0];
+    this.formcadastro.patchValue({ image: file}); 
+  }
+
+ //PASSO 6 
+  submit(){
+
+    if(this.formcadastro.invalid){
+      return;
+    }else{
+      console.log(this.formcadastro.value);
+      this.celularservice.criar(this.formcadastro.value).subscribe(
+        success => console.log('Cadastrado!'),
+        error => console.error(error),
+        () => console.log('Terminado')
+      );
+
+    }    
+  } 
+
+8)Programe a busca dos dados no arquivo de dados
+
+celulares : Celular[] = [];
+  
+  
+  getCelular(): void{
+    this.celularservice.getAll().subscribe((celular) => (this.celulares = celular));
+  }
+  
+ 9) Dentro do construtor chame seu método getCelular.
+ 
+			this.getCelular();
+			
+10) Programe a exclusão de registro pelo id
+
+	excluir(celular: Celular){
+		this.celulares = this.celulares.filter((a) => celular.nome !== a.nome);
+		this.celularservice.removeItem(celular.id).subscribe();
+  }
+   
